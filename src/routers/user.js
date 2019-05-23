@@ -21,7 +21,6 @@ const upload = multer({
 });
 
 /* CREATE USERS */
-
 router.post('/users', async (req, res) => {
   const user = new User(req.body);
 
@@ -36,7 +35,6 @@ router.post('/users', async (req, res) => {
 });
 
 /* LOGGING IN USERS */
-
 router.post('/users/login', async (req, res) => {
   try {
     const user = await User.findByCredentials(req.body.email, req.body.password);
@@ -48,7 +46,6 @@ router.post('/users/login', async (req, res) => {
 });
 
 /* LOGGING OUT USERS */
-
 router.post('/users/logout', auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(token => token.token !== req.token);
@@ -61,7 +58,6 @@ router.post('/users/logout', auth, async (req, res) => {
 });
 
 /* LOGOUT ALL USERS */
-
 router.post('/users/logoutAll', auth, async (req, res) => {
   try {
     req.user.tokens = [];
@@ -74,14 +70,12 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 });
 
 /* READ PROFILE */
-
 router.get('/users/me', auth, async (req, res) => {
   res.send(req.user);
 });
 
 
 /* UPDATE PROFILE */
-
 router.patch('/users/me', auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['name', 'email', 'password', 'age'];
@@ -108,7 +102,6 @@ router.patch('/users/me', auth, async (req, res) => {
 });
 
 /* DELETE USERS */
-
 router.delete('/users/me', auth, async (req, res) => {
   try {
     await User.findOneAndDelete({ _id: req.user._id });
@@ -120,7 +113,6 @@ router.delete('/users/me', auth, async (req, res) => {
 });
 
 /* UPLOADING FILES */
-
 router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
   const buffer = await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toBuffer();
   req.user.avatar = buffer;
@@ -132,7 +124,6 @@ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) 
 });
 
 /* DELETING AVATAR FILERS */
-
 router.delete('/users/me/avatar', auth, async (req, res) => {
   req.user.avatar = undefined;
   await req.user.save();
@@ -143,7 +134,6 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
 });
 
 /* SERVING UP AVATARS */
-
 router.get('/users/:id/avatar', async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

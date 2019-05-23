@@ -56,7 +56,6 @@ const userSchema = new mongoose.Schema({
 });
 
 /* CREATING VIRTUAL REFERENCE */
-
 userSchema.virtual('tasksBySpecificUser', {
   ref: 'Task',
   localField: '_id',
@@ -64,7 +63,6 @@ userSchema.virtual('tasksBySpecificUser', {
 });
 
 /* DELETING PASSWORD AND TOKENS ARRAY */
-
 userSchema.methods.toJSON = function () {
   const user = this;
   const userObject = user.toObject();
@@ -77,7 +75,6 @@ userSchema.methods.toJSON = function () {
 };
 
 /* GENERATING JWT */
-
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = await jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
@@ -89,7 +86,6 @@ userSchema.methods.generateAuthToken = async function () {
 };
 
 /* FIND BY EMAIL AND PASSWORD */
-
 userSchema.statics.findByCredentials = async (email, password) => {
   // eslint-disable-next-line no-use-before-define
   const user = await User.findOne({ email });
@@ -108,7 +104,6 @@ userSchema.statics.findByCredentials = async (email, password) => {
 };
 
 /* HASHING PASSWORDS */
-
 userSchema.pre('save', async function (next) {
   const user = this;
 
@@ -120,7 +115,6 @@ userSchema.pre('save', async function (next) {
 });
 
 /* DELETE USER TASKS WHEN USER IS DELETED */
-
 userSchema.pre('findOneAndDelete', async function (next) {
   const user = this;
   const { _id } = user.getQuery();
